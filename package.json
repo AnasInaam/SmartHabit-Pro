@@ -1,0 +1,14 @@
+{
+  "name": "smarthabit-convex",
+  "version": "1.0.0",
+  "description": "Convex backend for SmartHabit",
+  "main": "convex/_generated/api.js",
+  "scripts": {
+    "dev": "convex dev",
+    "deploy": "convex deploy"
+  },
+  "dependencies": {
+    "convex": "^1.5.0"
+  },
+  "devDependencies": {}
+}
