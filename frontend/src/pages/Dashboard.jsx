@@ -1,11 +1,11 @@
 import { useEffect } from 'react'
-import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { useUser } from '@clerk/clerk-react'
 import { useMutation } from 'convex/react'
 import { api } from '../../../convex/_generated/api'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
 
 function Dashboard() {
-  const { user, isLoading } = useKindeAuth()
+  const { user, isLoaded } = useUser()
   const createUser = useMutation(api.users.createUser)
 
   useEffect(() => {
@@ -15,10 +15,10 @@ function Dashboard() {
       
       // Create or update user in Convex database
       createUser({
-        kindeId: user.id,
-        email: user.email,
-        name: user.given_name || user.family_name || user.email,
-        avatar: user.picture || null,
+        userId: user.id,
+        email: user.primaryEmailAddress?.emailAddress || '',
+        name: user.firstName || user.lastName || user.primaryEmailAddress?.emailAddress || 'User',
+        avatar: user.imageUrl || null,
       }).then((result) => {
         console.log('User synced with Convex:', result)
       }).catch((error) => {
@@ -28,7 +28,7 @@ function Dashboard() {
   }, [user, createUser])
 
   // Show loading during authentication process
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <div className="flex items-center justify-center min-h-[60vh]">
         <div className="text-center">
@@ -39,7 +39,7 @@ function Dashboard() {
     )
   }
 
-  console.log('Dashboard render:', { user: user?.email })
+  console.log('Dashboard render:', { user: user?.primaryEmailAddress?.emailAddress })
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -49,7 +49,7 @@ function Dashboard() {
         </h1>
         {user && (
           <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Hello, {user.given_name || user.email}! 👋
+            Hello, {user.firstName || user.primaryEmailAddress?.emailAddress || 'User'}! 👋
           </p>
         )}
       </div>
@@ -64,8 +64,8 @@ function Dashboard() {
             {user && (
               <div className="text-xs text-green-600 dark:text-green-400 mt-2 space-y-1">
                 <p><strong>User ID:</strong> {user.id}</p>
-                <p><strong>Email:</strong> {user.email}</p>
-                <p><strong>Name:</strong> {user.given_name || user.family_name || 'Not provided'}</p>
+                <p><strong>Email:</strong> {user.primaryEmailAddress?.emailAddress}</p>
+                <p><strong>Name:</strong> {user.firstName || user.lastName || 'Not provided'}</p>
                 <p className="text-purple-600 dark:text-purple-400">
                   <strong>Status:</strong> Data syncing with Convex database
                 </p>

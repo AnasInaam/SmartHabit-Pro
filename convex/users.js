@@ -3,18 +3,18 @@ import { v } from "convex/values";
 
 // User Queries and Mutations
 export const getUser = query({
-  args: { kindeId: v.string() },
+  args: { userId: v.string() },
   handler: async (ctx, args) => {
     return await ctx.db
       .query("users")
-      .withIndex("by_kinde_id", (q) => q.eq("kindeId", args.kindeId))
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
       .first();
   },
 });
 
 export const createUser = mutation({
   args: {
-    kindeId: v.string(),
+    userId: v.string(),
     email: v.string(),
     name: v.string(),
     avatar: v.optional(v.string()),
@@ -22,7 +22,7 @@ export const createUser = mutation({
   handler: async (ctx, args) => {
     const existingUser = await ctx.db
       .query("users")
-      .withIndex("by_kinde_id", (q) => q.eq("kindeId", args.kindeId))
+      .withIndex("by_user_id", (q) => q.eq("userId", args.userId))
       .first();
 
     if (existingUser) {

@@ -3,7 +3,7 @@ import { v } from "convex/values";
 
 export default defineSchema({
   users: defineTable({
-    kindeId: v.string(),
+    userId: v.string(),
     email: v.string(),
     name: v.string(),
     avatar: v.optional(v.string()),
@@ -18,7 +18,7 @@ export default defineSchema({
       notifications: v.boolean(),
       reminderTime: v.string(),
     }),
-  }).index("by_kinde_id", ["kindeId"]),
+  }).index("by_user_id", ["userId"]),
 
   habits: defineTable({
     userId: v.id("users"),

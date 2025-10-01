@@ -1,4 +1,4 @@
-import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { SignInButton, SignUpButton } from '@clerk/clerk-react'
 import { motion } from 'framer-motion'
 import { 
   Target, 
@@ -14,8 +14,6 @@ import {
 } from 'lucide-react'
 
 function Home() {
-  const { login, register } = useKindeAuth()
-
   const features = [
     {
       icon: Target,
@@ -89,28 +87,26 @@ function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto mb-12">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => register({ 
-                  redirectUri: window.location.origin + '/callback'
-                })}
-                className="btn-primary text-lg px-8 py-4 rounded-full flex items-center gap-2 justify-center font-semibold shadow-xl"
-              >
-                Start Your Journey
-                <ArrowRight className="w-5 h-5" />
-              </motion.button>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-primary text-lg px-8 py-4 rounded-full flex items-center gap-2 justify-center font-semibold shadow-xl"
+                >
+                  Start Your Journey
+                  <ArrowRight className="w-5 h-5" />
+                </motion.button>
+              </SignUpButton>
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => login({ 
-                  redirectUri: window.location.origin + '/callback'
-                })}
-                className="btn-secondary text-lg px-8 py-4 rounded-full font-semibold"
-              >
-                Sign In
-              </motion.button>
+              <SignInButton mode="modal" redirectUrl="/dashboard">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-secondary text-lg px-8 py-4 rounded-full font-semibold"
+                >
+                  Sign In
+                </motion.button>
+              </SignInButton>
             </div>
 
             {/* Trust Indicators */}
@@ -230,27 +226,25 @@ function Home() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => register({ 
-                  redirectUri: window.location.origin + '/callback'
-                })}
-                className="bg-white text-primary-600 font-bold text-lg px-8 py-4 rounded-full hover:bg-gray-50 transition-all duration-200 shadow-lg"
-              >
-                Get Started Free
-              </motion.button>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-white text-primary-600 font-bold text-lg px-8 py-4 rounded-full hover:bg-gray-50 transition-all duration-200 shadow-lg"
+                >
+                  Get Started Free
+                </motion.button>
+              </SignUpButton>
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => login({ 
-                  redirectUri: window.location.origin + '/callback'
-                })}
-                className="border-2 border-white text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-white hover:text-primary-600 transition-all duration-200"
-              >
-                Sign In
-              </motion.button>
+              <SignInButton mode="modal" redirectUrl="/dashboard">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="border-2 border-white text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-white hover:text-primary-600 transition-all duration-200"
+                >
+                  Sign In
+                </motion.button>
+              </SignInButton>
             </div>
           </motion.div>
         </div>

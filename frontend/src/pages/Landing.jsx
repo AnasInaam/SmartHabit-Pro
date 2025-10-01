@@ -1,4 +1,4 @@
-import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { SignInButton, SignUpButton, useUser } from '@clerk/clerk-react'
 import { useNavigate } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
@@ -17,15 +17,15 @@ import {
 } from 'lucide-react'
 
 function Landing() {
-  const { login, register, isAuthenticated } = useKindeAuth()
+  const { isSignedIn } = useUser()
   const navigate = useNavigate()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isSignedIn) {
       navigate('/dashboard')
     }
-  }, [isAuthenticated, navigate])
+  }, [isSignedIn, navigate])
 
   const features = [
     {
@@ -104,18 +104,16 @@ function Landing() {
 
             {/* Desktop Auth Buttons */}
             <div className="hidden md:flex items-center space-x-4">
-              <button
-                onClick={() => login()}
-                className="text-gray-600 hover:text-primary-600 px-4 py-2 text-sm font-medium transition-colors"
-              >
-                Sign In
-              </button>
-              <button
-                onClick={() => register()}
-                className="btn-primary px-4 py-2 text-sm font-medium rounded-lg"
-              >
-                Get Started
-              </button>
+              <SignInButton mode="modal" redirectUrl="/dashboard">
+                <button className="text-gray-600 hover:text-primary-600 px-4 py-2 text-sm font-medium transition-colors">
+                  Sign In
+                </button>
+              </SignInButton>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <button className="btn-primary px-4 py-2 text-sm font-medium rounded-lg">
+                  Get Started
+                </button>
+              </SignUpButton>
             </div>
 
             {/* Mobile menu button */}
@@ -149,18 +147,16 @@ function Landing() {
                 Pricing
               </a>
               <div className="flex flex-col space-y-2 px-3 py-2">
-                <button
-                  onClick={() => login()}
-                  className="text-left text-gray-600 hover:text-primary-600 font-medium"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => register()}
-                  className="btn-primary w-full py-2 text-sm font-medium rounded-lg"
-                >
-                  Get Started
-                </button>
+                <SignInButton mode="modal" redirectUrl="/dashboard">
+                  <button className="text-left text-gray-600 hover:text-primary-600 font-medium">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal" redirectUrl="/dashboard">
+                  <button className="btn-primary w-full py-2 text-sm font-medium rounded-lg">
+                    Get Started
+                  </button>
+                </SignUpButton>
               </div>
             </div>
           </motion.div>
@@ -183,24 +179,26 @@ function Landing() {
             </p>
             
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center max-w-md sm:max-w-none mx-auto">
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => register()}
-                className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full flex items-center gap-2 justify-center font-semibold shadow-lg"
-              >
-                Get Started Free
-                <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-              </motion.button>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-primary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full flex items-center gap-2 justify-center font-semibold shadow-lg"
+                >
+                  Get Started Free
+                  <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
+                </motion.button>
+              </SignUpButton>
               
-              <motion.button
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => login()}
-                className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold"
-              >
-                Sign In
-              </motion.button>
+              <SignInButton mode="modal" redirectUrl="/dashboard">
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="btn-secondary text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full font-semibold"
+                >
+                  Sign In
+                </motion.button>
+              </SignInButton>
             </div>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 mt-6 sm:mt-8 text-sm text-gray-500">
@@ -374,12 +372,11 @@ function Landing() {
                   <span>Mobile app</span>
                 </li>
               </ul>
-              <button
-                onClick={() => register()}
-                className="btn-secondary w-full py-3 font-semibold"
-              >
-                Get Started
-              </button>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <button className="btn-secondary w-full py-3 font-semibold">
+                  Get Started
+                </button>
+              </SignUpButton>
             </motion.div>
 
             {/* Pro Plan */}
@@ -417,12 +414,11 @@ function Landing() {
                   <span>Custom reminders</span>
                 </li>
               </ul>
-              <button
-                onClick={() => register()}
-                className="btn-primary w-full py-3 font-semibold"
-              >
-                Start Free Trial
-              </button>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <button className="btn-primary w-full py-3 font-semibold">
+                  Start Free Trial
+                </button>
+              </SignUpButton>
             </motion.div>
 
             {/* Team Plan */}
@@ -455,12 +451,11 @@ function Landing() {
                   <span>Priority support</span>
                 </li>
               </ul>
-              <button
-                onClick={() => register()}
-                className="btn-secondary w-full py-3 font-semibold"
-              >
-                Contact Sales
-              </button>
+              <SignUpButton mode="modal" redirectUrl="/dashboard">
+                <button className="btn-secondary w-full py-3 font-semibold">
+                  Contact Sales
+                </button>
+              </SignUpButton>
             </motion.div>
           </div>
         </div>
@@ -482,14 +477,15 @@ function Landing() {
               Join thousands of users who have transformed their lives with SmartHabit
             </p>
             
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => register()}
-              className="bg-white text-primary-600 font-bold text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full hover:bg-gray-50 transition-all duration-200 shadow-lg"
-            >
-              Get Started for Free
-            </motion.button>
+            <SignUpButton mode="modal" redirectUrl="/dashboard">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-white text-primary-600 font-bold text-base sm:text-lg px-6 sm:px-8 py-3 sm:py-4 rounded-full hover:bg-gray-50 transition-all duration-200 shadow-lg"
+              >
+                Get Started for Free
+              </motion.button>
+            </SignUpButton>
 
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mt-6 sm:mt-8 text-white/80">
               <div className="flex items-center gap-2">

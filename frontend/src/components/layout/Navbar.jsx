@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
-import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { SignInButton, SignUpButton, UserButton, useUser } from '@clerk/clerk-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Target, 
@@ -22,8 +22,7 @@ import { useTheme } from '../../hooks/useTheme'
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isProfileOpen, setIsProfileOpen] = useState(false)
-  const { user, isAuthenticated, login, register, logout } = useKindeAuth()
+  const { user, isSignedIn } = useUser()
   const { theme, toggleTheme } = useTheme()
   const location = useLocation()
 
@@ -41,7 +40,7 @@ function Navbar() {
     { name: 'Settings', href: '/settings', icon: Settings }
   ]
 
-  const navItems = isAuthenticated ? privateNavItems : publicNavItems
+  const navItems = isSignedIn ? privateNavItems : publicNavItems
 
   const isActive = (path) => location.pathname === path
 
@@ -50,7 +49,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to={isAuthenticated ? "/dashboard" : "/"} className="flex items-center gap-2 group">
+          <Link to={isSignedIn ? "/dashboard" : "/"} className="flex items-center gap-2 group">
             <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center group-hover:scale-105 transition-transform">
               <Target className="w-5 h-5 text-white" />
             </div>
@@ -90,78 +89,20 @@ function Navbar() {
               )}
             </button>
 
-            {isAuthenticated ? (
-              <div className="relative">
-                <button
-                  onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-                >
-                  <div className="w-8 h-8 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-full flex items-center justify-center">
-                    {user?.picture ? (
-                      <img
-                        src={user.picture}
-                        alt={user.given_name}
-                        className="w-8 h-8 rounded-full"
-                      />
-                    ) : (
-                      <User className="w-4 h-4 text-white" />
-                    )}
-                  </div>
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                    {user?.given_name || 'User'}
-                  </span>
-                </button>
-
-                <AnimatePresence>
-                  {isProfileOpen && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.95, y: -10 }}
-                      animate={{ opacity: 1, scale: 1, y: 0 }}
-                      exit={{ opacity: 0, scale: 0.95, y: -10 }}
-                      className="absolute right-0 mt-2 w-48 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 py-2"
-                    >
-                      <div className="px-4 py-2 border-b border-gray-100 dark:border-gray-700">
-                        <p className="text-sm font-medium text-gray-900 dark:text-white">
-                          {user?.given_name} {user?.family_name}
-                        </p>
-                        <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
-                      </div>
-                      <Link
-                        to="/settings"
-                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
-                        onClick={() => setIsProfileOpen(false)}
-                      >
-                        <Settings className="w-4 h-4" />
-                        Settings
-                      </Link>
-                      <button
-                        onClick={() => {
-                          logout()
-                          setIsProfileOpen(false)
-                        }}
-                        className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20"
-                      >
-                        <LogOut className="w-4 h-4" />
-                        Sign Out
-                      </button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
+            {isSignedIn ? (
+              <UserButton afterSignOutUrl="/" />
             ) : (
               <div className="flex items-center space-x-3">
-                <button
-                  onClick={() => login({ redirectUri: window.location.origin + '/callback' })}
-                  className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-4 py-2 text-sm font-medium transition-colors"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => register({ redirectUri: window.location.origin + '/callback' })}
-                  className="btn-primary px-4 py-2 text-sm font-medium rounded-lg"
-                >
-                  Get Started
-                </button>
+                <SignInButton mode="modal">
+                  <button className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-4 py-2 text-sm font-medium transition-colors">
+                    Sign In
+                  </button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <button className="btn-primary px-4 py-2 text-sm font-medium rounded-lg">
+                    Get Started
+                  </button>
+                </SignUpButton>
               </div>
             )}
           </div>
@@ -218,13 +159,13 @@ function Navbar() {
                   {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 </button>
 
-                {isAuthenticated ? (
+                {isSignedIn ? (
                   <div className="space-y-2">
                     <div className="px-3 py-2">
                       <p className="text-sm font-medium text-gray-900 dark:text-white">
-                        {user?.given_name} {user?.family_name}
+                        {user?.firstName} {user?.lastName}
                       </p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.email}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{user?.primaryEmailAddress?.emailAddress}</p>
                     </div>
                     <Link
                       to="/settings"
@@ -234,37 +175,26 @@ function Navbar() {
                       <Settings className="w-4 h-4" />
                       Settings
                     </Link>
-                    <button
-                      onClick={() => {
-                        logout()
-                        setIsMenuOpen(false)
-                      }}
-                      className="flex items-center gap-3 w-full text-left px-3 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg"
-                    >
-                      <LogOut className="w-4 h-4" />
-                      Sign Out
-                    </button>
+                    <UserButton afterSignOutUrl="/" />
                   </div>
                 ) : (
                   <div className="space-y-2">
-                    <button
-                      onClick={() => {
-                        login({ redirectUri: window.location.origin + '/callback' })
-                        setIsMenuOpen(false)
-                      }}
-                      className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg"
-                    >
-                      Sign In
-                    </button>
-                    <button
-                      onClick={() => {
-                        register({ redirectUri: window.location.origin + '/callback' })
-                        setIsMenuOpen(false)
-                      }}
-                      className="btn-primary w-full py-2 text-sm font-medium rounded-lg"
-                    >
-                      Get Started
-                    </button>
+                    <SignInButton mode="modal">
+                      <button
+                        onClick={() => setIsMenuOpen(false)}
+                        className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg"
+                      >
+                        Sign In
+                      </button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <button
+                        onClick={() => setIsMenuOpen(false)}
+                        className="btn-primary w-full py-2 text-sm font-medium rounded-lg"
+                      >
+                        Get Started
+                      </button>
+                    </SignUpButton>
                   </div>
                 )}
               </div>

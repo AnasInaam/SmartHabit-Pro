@@ -1,5 +1,5 @@
-import { Routes, Route, Navigate, useNavigate, useLocation } from 'react-router-dom'
-import { useKindeAuth } from '@kinde-oss/kinde-auth-react'
+import { Routes, Route, Navigate } from 'react-router-dom'
+import { useUser } from '@clerk/clerk-react'
 import { useEffect } from 'react'
 import { useTheme } from './hooks/useTheme'
 
@@ -12,7 +12,6 @@ import Habits from './pages/Habits'
 import Analytics from './pages/Analytics'
 import Social from './pages/Social'
 import Settings from './pages/Settings'
-import Callback from './pages/Callback'
 
 // Components
 import LoadingSpinner from './components/ui/LoadingSpinner'
@@ -20,10 +19,10 @@ import Navbar from './components/layout/Navbar'
 
 // Auth wrapper for protected routes
 function AuthWrapper({ children }) {
-  const { isAuthenticated, isLoading, user } = useKindeAuth()
+  const { isSignedIn, isLoaded } = useUser()
 
   // Show loading while checking authentication
-  if (isLoading) {
+  if (!isLoaded) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
         <LoadingSpinner />
@@ -32,7 +31,7 @@ function AuthWrapper({ children }) {
   }
 
   // Redirect to home if not authenticated
-  if (!isAuthenticated) {
+  if (!isSignedIn) {
     return <Navigate to="/" replace />
   }
 
@@ -60,7 +59,6 @@ function PublicLayout({ children }) {
 
 function App() {
   const { theme, initializeTheme } = useTheme()
-  const { isAuthenticated, isLoading } = useKindeAuth()
 
   useEffect(() => {
     initializeTheme()
@@ -69,9 +67,6 @@ function App() {
   return (
     <div className={theme}>
       <Routes>
-        {/* Auth callback route */}
-        <Route path="/callback" element={<Callback />} />
-        
         {/* Public Routes */}
         <Route path="/" element={
           <PublicLayout>

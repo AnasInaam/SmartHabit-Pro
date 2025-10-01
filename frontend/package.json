@@ -9,17 +9,17 @@
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^5.49.1",
+    "clsx": "^2.0.0",
+    "convex": "^1.5.0",
+    "date-fns": "^2.30.0",
+    "framer-motion": "^10.16.0",
+    "lucide-react": "^0.263.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "convex": "^1.5.0",
-    "@kinde-oss/kinde-auth-react": "^2.0.0",
-    "lucide-react": "^0.263.1",
-    "date-fns": "^2.30.0",
-    "react-router-dom": "^6.15.0",
-    "framer-motion": "^10.16.0",
-    "recharts": "^2.8.0",
     "react-hot-toast": "^2.4.1",
-    "clsx": "^2.0.0",
+    "react-router-dom": "^6.15.0",
+    "recharts": "^2.8.0",
     "tailwind-merge": "^1.14.0"
   },
   "devDependencies": {
