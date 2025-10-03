@@ -16,6 +16,7 @@ import Settings from './pages/Settings'
 // Components
 import LoadingSpinner from './components/ui/LoadingSpinner'
 import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 
 // Auth wrapper for protected routes
 function AuthWrapper({ children }) {
@@ -48,11 +49,12 @@ function AuthWrapper({ children }) {
 // Public layout wrapper
 function PublicLayout({ children }) {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main>
+      <main className="flex-grow">
         {children}
       </main>
+      <Footer />
     </div>
   )
 }
