@@ -18,6 +18,10 @@ import {
   Trophy
 } from 'lucide-react'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import { Button } from '../components/ui/Button'
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../components/ui/Card'
+import { Badge } from '../components/ui/Badge'
+import { Progress } from '../components/ui/Progress'
 
 function Dashboard() {
   const { user, isLoaded } = useUser()
@@ -94,14 +98,12 @@ function Dashboard() {
               {new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </p>
           </div>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="btn-primary px-6 py-3 rounded-lg flex items-center gap-2 font-semibold"
-          >
-            <Plus className="w-5 h-5" />
-            New Habit
-          </motion.button>
+          <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+            <Button variant="gradient" size="lg">
+              <Plus className="w-5 h-5" />
+              New Habit
+            </Button>
+          </motion.div>
         </div>
       </motion.div>
 
@@ -113,19 +115,22 @@ function Dashboard() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: index * 0.1 }}
-            className="card p-6 hover:shadow-lg transition-all duration-300"
           >
-            <div className="flex items-center justify-between mb-4">
-              <div className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center`}>
-                <stat.icon className={`w-6 h-6 ${stat.color}`} />
-              </div>
-            </div>
-            <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
-              {stat.value}
-            </p>
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              {stat.label}
-            </p>
+            <Card className="hover:shadow-xl transition-shadow duration-300">
+              <CardContent className="pt-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center`}>
+                    <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                  </div>
+                </div>
+                <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-1">
+                  {stat.value}
+                </p>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {stat.label}
+                </p>
+              </CardContent>
+            </Card>
           </motion.div>
         ))}
       </div>
@@ -136,67 +141,72 @@ function Dashboard() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.6, delay: 0.2 }}
-          className="lg:col-span-2 card p-6"
+          className="lg:col-span-2"
         >
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-              <CheckCircle className="w-6 h-6 text-primary-600" />
-              Today's Habits
-            </h2>
-            <span className="text-sm text-gray-600 dark:text-gray-400">
-              0 of {todayHabits.length} completed
-            </span>
-          </div>
-
-          {todayHabits.length > 0 ? (
-            <div className="space-y-3">
-              {todayHabits.map((habit, index) => (
-                <motion.div
-                  key={habit.id}
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
-                  className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:shadow-md transition-all duration-200 group"
-                >
-                  <button
-                    className={`w-6 h-6 rounded-full border-2 flex-shrink-0 transition-all duration-200 ${
-                      habit.completed
-                        ? 'bg-primary-600 border-primary-600'
-                        : 'border-gray-300 dark:border-gray-600 hover:border-primary-600'
-                    }`}
-                  >
-                    {habit.completed && <CheckCircle className="w-6 h-6 text-white" />}
-                  </button>
-                  
-                  <div className="flex-1">
-                    <h3 className={`font-semibold ${habit.completed ? 'line-through text-gray-400' : 'text-gray-900 dark:text-white'}`}>
-                      {habit.name}
-                    </h3>
-                    <div className="flex items-center gap-3 mt-1 text-sm text-gray-600 dark:text-gray-400">
-                      <span className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        {habit.time}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Zap className="w-3 h-3 text-yellow-500" />
-                        {habit.xp} XP
-                      </span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              <Target className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
-              <p className="text-gray-600 dark:text-gray-400 mb-4">
-                No habits yet. Start building your routine!
-              </p>
-              <button className="btn-primary px-6 py-2 rounded-lg">
-                Create Your First Habit
-              </button>
-            </div>
-          )}
+          <Card>
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <CheckCircle className="w-6 h-6 text-primary-600" />
+                  Today's Habits
+                </CardTitle>
+                <Badge variant="secondary">
+                  0 of {todayHabits.length} completed
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {todayHabits.length > 0 ? (
+                <div className="space-y-3">
+                  {todayHabits.map((habit, index) => (
+                    <motion.div
+                      key={habit.id}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.4, delay: 0.3 + index * 0.1 }}
+                      className="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-800/50 rounded-lg hover:shadow-md transition-all duration-200 group"
+                    >
+                      <button
+                        className={`w-6 h-6 rounded-full border-2 flex-shrink-0 transition-all duration-200 ${
+                          habit.completed
+                            ? 'bg-primary-600 border-primary-600'
+                            : 'border-gray-300 dark:border-gray-600 hover:border-primary-600'
+                        }`}
+                      >
+                        {habit.completed && <CheckCircle className="w-6 h-6 text-white" />}
+                      </button>
+                      
+                      <div className="flex-1">
+                        <h3 className={`font-semibold ${habit.completed ? 'line-through text-gray-400' : 'text-gray-900 dark:text-white'}`}>
+                          {habit.name}
+                        </h3>
+                        <div className="flex items-center gap-3 mt-1 text-sm text-gray-600 dark:text-gray-400">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {habit.time}
+                          </span>
+                          <span className="flex items-center gap-1">
+                            <Zap className="w-3 h-3 text-yellow-500" />
+                            {habit.xp} XP
+                          </span>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              ) : (
+                <div className="text-center py-12">
+                  <Target className="w-16 h-16 text-gray-300 dark:text-gray-600 mx-auto mb-4" />
+                  <p className="text-gray-600 dark:text-gray-400 mb-4">
+                    No habits yet. Start building your routine!
+                  </p>
+                  <Button variant="gradient" size="lg">
+                    Create Your First Habit
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Sidebar */}
@@ -206,24 +216,26 @@ function Dashboard() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
-            className="card p-6"
           >
-            <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4">
-              Quick Actions
-            </h3>
-            <div className="space-y-3">
-              {quickActions.map((action, index) => (
-                <motion.button
-                  key={action.label}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className={`w-full p-4 bg-gradient-to-r ${action.color} text-white rounded-lg font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all duration-200`}
-                >
-                  <action.icon className="w-5 h-5" />
-                  {action.label}
-                </motion.button>
-              ))}
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle>Quick Actions</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {quickActions.map((action, index) => (
+                  <motion.div key={action.label} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                    <Button 
+                      variant="gradient" 
+                      className={`w-full bg-gradient-to-r ${action.color}`}
+                      size="lg"
+                    >
+                      <action.icon className="w-5 h-5" />
+                      {action.label}
+                    </Button>
+                  </motion.div>
+                ))}
+              </CardContent>
+            </Card>
           </motion.div>
 
           {/* Progress Card */}
@@ -231,16 +243,19 @@ function Dashboard() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="card p-6 bg-gradient-to-br from-primary-600 to-secondary-600 text-white"
           >
-            <h3 className="text-xl font-bold mb-2">🎯 Keep Going!</h3>
-            <p className="text-white/90 text-sm mb-4">
-              You're doing great! Complete your habits to build your streak.
-            </p>
-            <div className="flex items-center gap-2 text-sm">
-              <TrendingUp className="w-4 h-4" />
-              <span>Start your journey today</span>
-            </div>
+            <Card className="bg-gradient-to-br from-primary-600 to-secondary-600 border-none">
+              <CardContent className="pt-6 text-white">
+                <h3 className="text-xl font-bold mb-2">🎯 Keep Going!</h3>
+                <p className="text-white/90 text-sm mb-4">
+                  You're doing great! Complete your habits to build your streak.
+                </p>
+                <div className="flex items-center gap-2 text-sm">
+                  <TrendingUp className="w-4 h-4" />
+                  <span>Start your journey today</span>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
 
           {/* System Status */}
@@ -248,31 +263,32 @@ function Dashboard() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, delay: 0.6 }}
-            className="card p-6"
           >
-            <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-4">
-              System Status
-            </h3>
-            <div className="space-y-3 text-sm">
-              <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                <CheckCircle className="w-4 h-4" />
-                <span>Authentication Active</span>
-              </div>
-              <div className="flex items-center gap-2 text-blue-600 dark:text-blue-400">
-                <CheckCircle className="w-4 h-4" />
-                <span>Database Connected</span>
-              </div>
-              {user && (
-                <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
-                  <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
-                    <strong>User ID:</strong> {user.id.substring(0, 12)}...
-                  </p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">
-                    <strong>Email:</strong> {user.primaryEmailAddress?.emailAddress}
-                  </p>
-                </div>
-              )}
-            </div>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg">System Status</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm">
+                <Badge variant="success" className="flex items-center gap-2 w-fit">
+                  <CheckCircle className="w-3 h-3" />
+                  Authentication Active
+                </Badge>
+                <Badge variant="success" className="flex items-center gap-2 w-fit">
+                  <CheckCircle className="w-3 h-3" />
+                  Database Connected
+                </Badge>
+                {user && (
+                  <div className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700">
+                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-1">
+                      <strong>User ID:</strong> {user.id.substring(0, 12)}...
+                    </p>
+                    <p className="text-xs text-gray-600 dark:text-gray-400">
+                      <strong>Email:</strong> {user.primaryEmailAddress?.emailAddress}
+                    </p>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </div>

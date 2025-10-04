@@ -9,6 +9,7 @@ import {
   Globe,
   Shield
 } from 'lucide-react'
+import { Card, CardContent } from '../components/ui/Card'
 
 function About() {
   const team = [
@@ -217,22 +218,25 @@ function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="card text-center p-8"
               >
-                <img
-                  src={member.image}
-                  alt={member.name}
-                  className="w-24 h-24 rounded-full mx-auto mb-6 object-cover"
-                />
-                <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                  {member.name}
-                </h3>
-                <p className="text-primary-600 font-medium mb-4">
-                  {member.role}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  {member.bio}
-                </p>
+                <Card className="text-center hover:shadow-xl transition-all">
+                  <CardContent className="pt-8">
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className="w-24 h-24 rounded-full mx-auto mb-6 object-cover"
+                    />
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                      {member.name}
+                    </h3>
+                    <p className="text-primary-600 dark:text-primary-400 font-medium mb-4">
+                      {member.role}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                      {member.bio}
+                    </p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>

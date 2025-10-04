@@ -19,6 +19,7 @@ import {
   Moon
 } from 'lucide-react'
 import { useTheme } from '../../hooks/useTheme'
+import { Button } from '../ui/Button'
 
 function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -94,14 +95,14 @@ function Navbar() {
             ) : (
               <div className="flex items-center space-x-3">
                 <SignInButton mode="modal">
-                  <button className="text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 px-4 py-2 text-sm font-medium transition-colors">
+                  <Button variant="ghost" size="sm">
                     Sign In
-                  </button>
+                  </Button>
                 </SignInButton>
                 <SignUpButton mode="modal">
-                  <button className="btn-primary px-4 py-2 text-sm font-medium rounded-lg">
+                  <Button variant="gradient" size="sm">
                     Get Started
-                  </button>
+                  </Button>
                 </SignUpButton>
               </div>
             )}
@@ -180,20 +181,18 @@ function Navbar() {
                 ) : (
                   <div className="space-y-2">
                     <SignInButton mode="modal">
-                      <button
-                        onClick={() => setIsMenuOpen(false)}
-                        className="w-full text-left px-3 py-2 text-sm text-gray-600 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-lg"
-                      >
-                        Sign In
-                      </button>
+                      <div onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="ghost" size="sm" className="w-full justify-start">
+                          Sign In
+                        </Button>
+                      </div>
                     </SignInButton>
                     <SignUpButton mode="modal">
-                      <button
-                        onClick={() => setIsMenuOpen(false)}
-                        className="btn-primary w-full py-2 text-sm font-medium rounded-lg"
-                      >
-                        Get Started
-                      </button>
+                      <div onClick={() => setIsMenuOpen(false)}>
+                        <Button variant="gradient" size="sm" className="w-full">
+                          Get Started
+                        </Button>
+                      </div>
                     </SignUpButton>
                   </div>
                 )}

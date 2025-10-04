@@ -12,6 +12,9 @@ import {
   BarChart,
   Shield
 } from 'lucide-react'
+import { Button } from '../components/ui/Button'
+import { Card, CardContent } from '../components/ui/Card'
+import { Badge } from '../components/ui/Badge'
 
 function Home() {
   const features = [
@@ -69,10 +72,11 @@ function Home() {
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.2 }}
-              className="inline-flex items-center gap-2 bg-primary-100 text-primary-700 px-4 py-2 rounded-full text-sm font-medium mb-6"
             >
-              <Award className="w-4 h-4" />
-              #1 Habit Tracking App of 2025
+              <Badge variant="outline" className="inline-flex items-center gap-2 mb-6">
+                <Award className="w-4 h-4" />
+                #1 Habit Tracking App of 2025
+              </Badge>
             </motion.div>
 
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-gray-900 mb-6 leading-tight">
@@ -88,24 +92,26 @@ function Home() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-md sm:max-w-none mx-auto mb-12">
               <SignUpButton mode="modal" redirectUrl="/dashboard">
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="btn-primary text-lg px-8 py-4 rounded-full flex items-center gap-2 justify-center font-semibold shadow-xl"
                 >
-                  Start Your Journey
-                  <ArrowRight className="w-5 h-5" />
-                </motion.button>
+                  <Button variant="gradient" size="lg" className="w-full sm:w-auto">
+                    Start Your Journey
+                    <ArrowRight className="w-5 h-5 ml-2" />
+                  </Button>
+                </motion.div>
               </SignUpButton>
               
               <SignInButton mode="modal" redirectUrl="/dashboard">
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="btn-secondary text-lg px-8 py-4 rounded-full font-semibold"
                 >
-                  Sign In
-                </motion.button>
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto">
+                    Sign In
+                  </Button>
+                </motion.div>
               </SignInButton>
             </div>
 
@@ -192,17 +198,20 @@ function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="card text-center hover:shadow-xl transition-all duration-300 p-8"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full mb-6">
-                  <feature.icon className="w-8 h-8 text-primary-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600">
-                  {feature.description}
-                </p>
+                <Card className="text-center hover:shadow-xl transition-all duration-300">
+                  <CardContent className="pt-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full mb-6">
+                      <feature.icon className="w-8 h-8 text-primary-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                      {feature.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300">
+                      {feature.description}
+                    </p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -227,23 +236,25 @@ function Home() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <SignUpButton mode="modal" redirectUrl="/dashboard">
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="bg-white text-primary-600 font-bold text-lg px-8 py-4 rounded-full hover:bg-gray-50 transition-all duration-200 shadow-lg"
                 >
-                  Get Started Free
-                </motion.button>
+                  <Button size="lg" className="bg-white text-primary-600 hover:bg-gray-50 font-bold w-full sm:w-auto">
+                    Get Started Free
+                  </Button>
+                </motion.div>
               </SignUpButton>
               
               <SignInButton mode="modal" redirectUrl="/dashboard">
-                <motion.button
+                <motion.div
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="border-2 border-white text-white font-bold text-lg px-8 py-4 rounded-full hover:bg-white hover:text-primary-600 transition-all duration-200"
                 >
-                  Sign In
-                </motion.button>
+                  <Button variant="outline" size="lg" className="border-2 border-white text-white hover:bg-white hover:text-primary-600 w-full sm:w-auto">
+                    Sign In
+                  </Button>
+                </motion.div>
               </SignInButton>
             </div>
           </motion.div>

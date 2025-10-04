@@ -10,6 +10,8 @@ import {
   CheckCircle
 } from 'lucide-react'
 import toast from 'react-hot-toast'
+import { Button } from '../components/ui/Button'
+import { Card, CardContent } from '../components/ui/Card'
 
 function Contact() {
   const [formData, setFormData] = useState({
@@ -115,20 +117,23 @@ function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="card text-center p-8 hover:shadow-xl transition-all duration-300"
               >
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full mb-6">
-                  <info.icon className="w-8 h-8 text-primary-600" />
-                </div>
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {info.title}
-                </h3>
-                <p className="text-primary-600 font-medium mb-2">
-                  {info.content}
-                </p>
-                <p className="text-gray-600 text-sm">
-                  {info.description}
-                </p>
+                <Card className="text-center hover:shadow-xl transition-all duration-300">
+                  <CardContent className="pt-8">
+                    <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-primary-100 to-secondary-100 rounded-full mb-6">
+                      <info.icon className="w-8 h-8 text-primary-600" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-3">
+                      {info.title}
+                    </h3>
+                    <p className="text-primary-600 dark:text-primary-400 font-medium mb-2">
+                      {info.content}
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-300 text-sm">
+                      {info.description}
+                    </p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>
@@ -158,9 +163,10 @@ function Contact() {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
             viewport={{ once: true }}
-            className="card p-8"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <Card>
+              <CardContent className="pt-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
@@ -227,26 +233,33 @@ function Contact() {
                 />
               </div>
 
-              <motion.button
-                type="submit"
-                disabled={isSubmitting}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-full btn-primary py-4 text-lg font-semibold rounded-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                {isSubmitting ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    Sending...
-                  </>
-                ) : (
-                  <>
-                    <Send className="w-5 h-5" />
-                    Send Message
-                  </>
-                )}
-              </motion.button>
-            </form>
+                  <motion.div
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      variant="gradient"
+                      size="lg"
+                      className="w-full"
+                    >
+                      {isSubmitting ? (
+                        <>
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <span className="ml-2">Sending...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Send className="w-5 h-5" />
+                          <span className="ml-2">Send Message</span>
+                        </>
+                      )}
+                    </Button>
+                  </motion.div>
+                </form>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </section>
@@ -277,15 +290,18 @@ function Contact() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="card p-6"
               >
-                <h3 className="text-lg font-semibold text-gray-900 mb-3 flex items-start gap-3">
-                  <MessageCircle className="w-5 h-5 text-primary-600 flex-shrink-0 mt-0.5" />
-                  {faq.question}
-                </h3>
-                <p className="text-gray-600 ml-8">
-                  {faq.answer}
-                </p>
+                <Card>
+                  <CardContent className="pt-6">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-3 flex items-start gap-3">
+                      <MessageCircle className="w-5 h-5 text-primary-600 dark:text-primary-400 flex-shrink-0 mt-0.5" />
+                      {faq.question}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-300 ml-8">
+                      {faq.answer}
+                    </p>
+                  </CardContent>
+                </Card>
               </motion.div>
             ))}
           </div>

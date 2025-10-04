@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Target, Mail, Phone, MapPin, Twitter, Facebook, Instagram, Linkedin, Heart } from 'lucide-react'
+import { Button } from '../ui/Button'
 
 function Footer() {
   const currentYear = new Date().getFullYear()
@@ -158,12 +159,9 @@ function Footer() {
                 placeholder="Enter your email"
                 className="flex-1 px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-white placeholder-gray-500"
               />
-              <button
-                type="submit"
-                className="px-6 py-2 bg-gradient-to-r from-primary-600 to-secondary-600 rounded-lg font-medium hover:from-primary-700 hover:to-secondary-700 transition-all duration-200 whitespace-nowrap"
-              >
+              <Button type="submit" variant="gradient">
                 Subscribe
-              </button>
+              </Button>
             </form>
           </div>
         </div>
