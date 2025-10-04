@@ -13,6 +13,8 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as achievements from "../achievements.js";
+import type * as analytics from "../analytics.js";
 import type * as habits from "../habits.js";
 import type * as users from "../users.js";
 
@@ -25,6 +27,8 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  achievements: typeof achievements;
+  analytics: typeof analytics;
   habits: typeof habits;
   users: typeof users;
 }>;

@@ -46,8 +46,24 @@ function AuthWrapper({ children }) {
   )
 }
 
-// Public layout wrapper
+// Public layout wrapper - redirects to dashboard if already signed in
 function PublicLayout({ children }) {
+  const { isSignedIn, isLoaded } = useUser()
+
+  // Show loading while checking authentication
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary-50 via-white to-secondary-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <LoadingSpinner />
+      </div>
+    )
+  }
+
+  // Redirect to dashboard if already authenticated
+  if (isSignedIn) {
+    return <Navigate to="/dashboard" replace />
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />

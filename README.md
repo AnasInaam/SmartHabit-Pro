@@ -12,12 +12,13 @@ A modern, professional habit tracking application with gamification, social feat
 - **Cross-platform**: Responsive design that works on desktop, tablet, and mobile
 
 ### Professional Features
-- **Enterprise Authentication**: Powered by Kinde for secure, scalable auth
+- **Enterprise Authentication**: Powered by Clerk for secure, scalable auth
 - **Real-time Database**: Convex provides instant data synchronization
-- **Modern UI/UX**: Glass morphism design with smooth animations
+- **Modern UI/UX**: Shadcn/ui components with Tailwind CSS
 - **Dark/Light Theme**: Automatic theme detection with manual toggle
 - **Accessibility**: WCAG compliant with keyboard navigation
 - **Performance**: Optimized with lazy loading and efficient state management
+- **Gamification**: XP system, levels (1-10), streaks, and achievements
 
 ## 🛠 Tech Stack
 
@@ -32,7 +33,7 @@ A modern, professional habit tracking application with gamification, social feat
 
 ### Backend & Infrastructure
 - **Convex** - Real-time database and backend-as-a-service
-- **Kinde** - Enterprise-grade authentication and user management
+- **Clerk** - Enterprise-grade authentication and user management
 
 ### Development Tools
 - **ESLint** - Code linting and formatting
@@ -47,30 +48,36 @@ A modern, professional habit tracking application with gamification, social feat
 
 ### 1. Clone the Repository
 ```bash
-git clone <your-repo-url>
-cd SmartHabit/frontend
+git clone https://github.com/AnasInaam/SmartHabit-Pro.git
+cd SmartHabit-Pro
 ```
 
 ### 2. Install Dependencies
 ```bash
+# Install root dependencies
 npm install
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
 ```
 
 ### 3. Set Up Environment Variables
-```bash
-cp .env.example .env
-```
 
-Edit `.env` with your credentials:
+Create `.env.local` in the root directory:
 ```env
 # Convex (Get from https://dashboard.convex.dev)
 VITE_CONVEX_URL=your_convex_deployment_url
+```
 
-# Kinde Auth (Get from https://app.kinde.com)
-VITE_KINDE_CLIENT_ID=your_kinde_client_id
-VITE_KINDE_DOMAIN=your_kinde_domain
-VITE_KINDE_REDIRECT_URI=http://localhost:3000/dashboard
-VITE_KINDE_LOGOUT_URI=http://localhost:3000
+Create `frontend/.env` file:
+```env
+# Clerk Auth (Get from https://clerk.com)
+VITE_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+
+# Convex
+VITE_CONVEX_URL=your_convex_deployment_url
 ```
 
 ### 4. Set Up Convex Database
@@ -90,41 +97,71 @@ This will:
 - Deploy your schema and functions
 - Provide your `VITE_CONVEX_URL`
 
-### 5. Set Up Kinde Authentication
+### 5. Set Up Clerk Authentication
 
-1. Go to [Kinde](https://app.kinde.com) and create an account
+1. Go to [Clerk](https://clerk.com) and create an account
 2. Create a new application
-3. Configure redirect URLs:
-   - **Allowed callback URLs**: `http://localhost:3000/dashboard`
-   - **Allowed logout redirect URLs**: `http://localhost:3000`
-4. Copy your credentials to `.env`
+3. Configure redirect URLs in Clerk dashboard:
+   - **Home URL**: `http://localhost:3002`
+   - **Sign in URL**: `http://localhost:3002`
+   - **Sign up URL**: `http://localhost:3002`
+4. Copy your `Publishable Key` to `frontend/.env`
 
-### 6. Start Development Server
+### 6. Start Development Servers
+
+**Terminal 1 - Convex Backend:**
 ```bash
+npx convex dev
+```
+
+**Terminal 2 - Frontend:**
+```bash
+cd frontend
 npm run dev
 ```
 
-Visit `http://localhost:3000` to see the application.
+Visit `http://localhost:3002` to see the application.
 
 ## 🏗 Project Structure
 
 ```
-src/
-├── components/          # Reusable UI components
-│   ├── ui/             # Basic UI components (buttons, inputs, etc.)
-│   ├── layout/         # Layout components (navbar, sidebar)
-│   └── features/       # Feature-specific components
-├── pages/              # Page components
-│   ├── Landing.jsx     # Landing page
-│   ├── Dashboard.jsx   # Main dashboard
-│   ├── Habits.jsx      # Habit management
-│   ├── Analytics.jsx   # Progress analytics
-│   ├── Social.jsx      # Social features
-│   └── Settings.jsx    # User settings
-├── hooks/              # Custom React hooks
-├── utils/              # Utility functions
-├── lib/                # Third-party library configurations
-└── styles/             # Global styles and themes
+SmartHabit-Pro/
+├── convex/                 # Backend (Convex)
+│   ├── achievements.ts     # Achievement system (10 achievements)
+│   ├── analytics.ts        # Analytics queries (6 functions)
+│   ├── habits.ts          # Habit CRUD (10 functions)
+│   ├── schema.ts          # Database schema
+│   ├── users.ts           # User management (6 functions)
+│   └── _generated/        # Auto-generated API
+│
+└── frontend/
+    └── src/
+        ├── components/
+        │   ├── ui/            # Shadcn/ui components
+        │   │   ├── Badge.jsx
+        │   │   ├── Button.jsx
+        │   │   ├── Card.jsx
+        │   │   ├── LoadingSpinner.jsx
+        │   │   └── Progress.jsx
+        │   └── layout/
+        │       ├── Footer.jsx
+        │       └── Navbar.jsx
+        ├── pages/
+        │   ├── Home.jsx       # Landing page
+        │   ├── Dashboard.jsx  # Main dashboard (real-time data)
+        │   ├── Habits.jsx     # Habit management
+        │   ├── Analytics.jsx  # Progress analytics (real-time charts)
+        │   ├── Social.jsx     # Social features
+        │   ├── Settings.jsx   # User settings
+        │   ├── About.jsx      # About page
+        │   └── Contact.jsx    # Contact page
+        ├── hooks/
+        │   ├── useConvex.ts   # 17 custom Convex hooks
+        │   └── useTheme.js    # Theme management
+        ├── lib/
+        │   └── utils.js       # Utility functions
+        ├── App.jsx            # Main app with routing
+        └── main.jsx           # Entry point
 ```
 
 ## 🎨 Design System
@@ -186,12 +223,10 @@ npx convex deploy --prod
 ```
 
 ### Environment Variables for Production
-Update your `.env` for production:
+Update your environment variables for production:
 ```env
 VITE_CONVEX_URL=https://your-production-convex-url
-VITE_KINDE_DOMAIN=your-production-domain
-VITE_KINDE_REDIRECT_URI=https://your-domain.com/dashboard
-VITE_KINDE_LOGOUT_URI=https://your-domain.com
+VITE_CLERK_PUBLISHABLE_KEY=your_production_clerk_key
 ```
 
 ## 🧪 Testing
@@ -221,10 +256,11 @@ The app is fully responsive with:
 
 ## 🔒 Security Features
 
-- **Secure Authentication**: Kinde provides enterprise-grade security
+- **Secure Authentication**: Clerk provides enterprise-grade security with MFA support
 - **Data Validation**: Client and server-side validation
 - **HTTPS Only**: Enforced in production
 - **Content Security Policy**: Prevents XSS attacks
+- **Real-time Data Security**: Convex provides secure, authenticated queries
 - **Regular Updates**: Dependencies kept up to date
 
 ## 🤝 Contributing
