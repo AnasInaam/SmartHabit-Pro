@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { useState } from 'react'
 import { 
   TrendingUp, 
   Target, 
@@ -8,12 +9,18 @@ import {
   PieChart,
   Activity,
   Clock,
-  Zap
+  Zap,
+  Filter
 } from 'lucide-react'
 import { Card, CardHeader, CardTitle, CardContent } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
 import { Progress } from '../components/ui/Progress'
+import { Button } from '../components/ui/Button'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import CompletionRateChart from '../components/analytics/CompletionRateChart'
+import StreakCalendar from '../components/analytics/StreakCalendar'
+import CategoryPieChart from '../components/analytics/CategoryPieChart'
+import XPProgressChart from '../components/analytics/XPProgressChart'
 import {
   useCompletionStats,
   useCompletionRateByCategory,
@@ -24,7 +31,10 @@ import {
 } from '../hooks/useConvex'
 
 function Analytics() {
-  const completionStats = useCompletionStats(30) // Last 30 days
+  const [timeRange, setTimeRange] = useState('30d')
+  const days = timeRange === '7d' ? 7 : timeRange === '30d' ? 30 : 90
+  
+  const completionStats = useCompletionStats(days)
   const categoryRates = useCompletionRateByCategory()
   const streakAnalysis = useStreakAnalysis()
   const timeAnalysis = useTimeOfDayAnalysis()
@@ -83,12 +93,33 @@ function Analytics() {
         transition={{ duration: 0.6 }}
         className="mb-8"
       >
-        <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
-          📊 Analytics Dashboard
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400">
-          Track your progress and insights over time
-        </p>
+        <div className="flex items-center justify-between flex-wrap gap-4">
+          <div>
+            <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white mb-2">
+              📊 Analytics Dashboard
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
+              Track your progress and insights over time
+            </p>
+          </div>
+          
+          {/* Time Range Filter */}
+          <div className="flex items-center gap-2">
+            <Filter className="w-5 h-5 text-gray-600 dark:text-gray-400" />
+            <div className="flex gap-2">
+              {['7d', '30d', '90d'].map((range) => (
+                <Button
+                  key={range}
+                  variant={timeRange === range ? "gradient" : "outline"}
+                  size="sm"
+                  onClick={() => setTimeRange(range)}
+                >
+                  {range === '7d' ? 'Week' : range === '30d' ? 'Month' : '3 Months'}
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Quick Stats */}
@@ -306,58 +337,48 @@ function Analytics() {
         </motion.div>
       </div>
 
-      {/* Completion Trend */}
+      {/* Advanced Charts Section */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6, delay: 0.6 }}
-        className="mt-8"
+        className="mt-8 space-y-8"
       >
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <BarChart3 className="w-6 h-6 text-primary-600" />
-              30-Day Completion Trend
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {completionStats && completionStats.length > 0 ? (
-              <div className="space-y-2">
-                <div className="flex items-end justify-between gap-1 h-48">
-                  {completionStats.map((day, index) => {
-                    const maxCompletions = Math.max(...completionStats.map(d => d.completions))
-                    const height = maxCompletions > 0 ? (day.completions / maxCompletions) * 100 : 0
-                    
-                    return (
-                      <div 
-                        key={index}
-                        className="flex-1 flex flex-col items-center justify-end group cursor-pointer"
-                      >
-                        <div 
-                          className="w-full bg-gradient-to-t from-primary-600 to-secondary-600 rounded-t-md transition-all duration-300 hover:opacity-80"
-                          style={{ height: `${height}%` }}
-                        >
-                          <div className="opacity-0 group-hover:opacity-100 transition-opacity bg-gray-900 text-white text-xs px-2 py-1 rounded -mt-8 whitespace-nowrap">
-                            {day.date}: {day.completions}
-                          </div>
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400 mt-4">
-                  Hover over bars to see daily completions
-                </p>
-              </div>
-            ) : (
-              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
-                <BarChart3 className="w-16 h-16 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">No completion data yet</p>
-                <p className="text-sm">Complete some habits to see your trend!</p>
-              </div>
-            )}
-          </CardContent>
-        </Card>
+        {/* Completion Rate Line Chart */}
+        <CompletionRateChart 
+          data={completionStats?.map(stat => ({
+            date: new Date(stat.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+            completionRate: Math.round((stat.completions / Math.max(stat.scheduled || 1, 1)) * 100)
+          }))}
+          timeRange={timeRange}
+        />
+
+        {/* Two Column Charts */}
+        <div className="grid lg:grid-cols-2 gap-8">
+          {/* Category Pie Chart */}
+          <CategoryPieChart 
+            data={categoryRates?.map(cat => ({
+              name: cat.category,
+              value: cat.total
+            }))}
+          />
+
+          {/* XP Progress Area Chart */}
+          <XPProgressChart 
+            data={completionStats?.map((stat, index) => ({
+              date: new Date(stat.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
+              xp: completionStats.slice(0, index + 1).reduce((sum, s) => sum + (s.completions * 10), 0)
+            }))}
+          />
+        </div>
+
+        {/* Streak Calendar Heatmap */}
+        <StreakCalendar 
+          completionData={completionStats?.map(stat => ({
+            date: stat.date,
+            count: stat.completions
+          }))}
+        />
       </motion.div>
     </div>
   )

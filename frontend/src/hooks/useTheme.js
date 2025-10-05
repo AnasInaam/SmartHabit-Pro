@@ -1,16 +1,15 @@
 import { useState, useCallback } from 'react'
 
 export function useTheme() {
-  const [theme, setTheme] = useState(() => {
+  const [theme, setThemeState] = useState(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('theme') || 'light'
     }
     return 'light'
   })
 
-  const toggleTheme = useCallback(() => {
-    const newTheme = theme === 'light' ? 'dark' : 'light'
-    setTheme(newTheme)
+  const setTheme = useCallback((newTheme) => {
+    setThemeState(newTheme)
     localStorage.setItem('theme', newTheme)
     
     if (newTheme === 'dark') {
@@ -18,7 +17,12 @@ export function useTheme() {
     } else {
       document.documentElement.classList.remove('dark')
     }
-  }, [theme])
+  }, [])
+
+  const toggleTheme = useCallback(() => {
+    const newTheme = theme === 'light' ? 'dark' : 'light'
+    setTheme(newTheme)
+  }, [theme, setTheme])
 
   const initializeTheme = useCallback(() => {
     const savedTheme = localStorage.getItem('theme')
@@ -26,16 +30,11 @@ export function useTheme() {
     const initialTheme = savedTheme || systemTheme
 
     setTheme(initialTheme)
-    
-    if (initialTheme === 'dark') {
-      document.documentElement.classList.add('dark')
-    } else {
-      document.documentElement.classList.remove('dark')
-    }
-  }, [])
+  }, [setTheme])
 
   return {
     theme,
+    setTheme,
     toggleTheme,
     initializeTheme,
     isDark: theme === 'dark'

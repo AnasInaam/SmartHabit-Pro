@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useUser } from '@clerk/clerk-react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import { 
   Target, 
   TrendingUp, 
@@ -24,22 +24,29 @@ import { Button } from '../components/ui/Button'
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../components/ui/Card'
 import { Badge } from '../components/ui/Badge'
 import { Progress } from '../components/ui/Progress'
+import Confetti from '../components/ui/Confetti'
+import AchievementToast from '../components/rewards/AchievementToast'
 import { 
   useUserStats, 
   useCreateUser, 
   useTodaysHabits, 
   useCompleteHabit,
-  useCheckAchievements 
+  useCheckAchievements,
+  useUserAchievements
 } from '../hooks/useConvex'
 
 function Dashboard() {
   const { user, isLoaded } = useUser()
   const userStats = useUserStats()
   const todaysHabits = useTodaysHabits()
+  const achievements = useUserAchievements()
   const createUser = useCreateUser()
   const completeHabit = useCompleteHabit()
   const checkAchievements = useCheckAchievements()
   const [completingHabit, setCompletingHabit] = useState(null)
+  const [showConfetti, setShowConfetti] = useState(0)
+  const [newAchievement, setNewAchievement] = useState(null)
+  const [prevLevel, setPrevLevel] = useState(null)
 
   // Sync user with Convex on mount
   useEffect(() => {
@@ -54,6 +61,30 @@ function Dashboard() {
       })
     }
   }, [user, createUser])
+
+  // Track level changes for confetti
+  useEffect(() => {
+    if (userStats?.level) {
+      if (prevLevel !== null && userStats.level > prevLevel) {
+        setShowConfetti(Date.now())
+      }
+      setPrevLevel(userStats.level)
+    }
+  }, [userStats?.level, prevLevel])
+
+  // Check for new achievements
+  useEffect(() => {
+    if (achievements && achievements.length > 0) {
+      const latestAchievement = achievements[0]
+      const timeSinceUnlock = Date.now() - latestAchievement.unlockedAt
+      
+      // Show if unlocked in the last 5 seconds
+      if (timeSinceUnlock < 5000) {
+        setNewAchievement(latestAchievement)
+        setTimeout(() => setNewAchievement(null), 5000)
+      }
+    }
+  }, [achievements])
 
   const handleCompleteHabit = async (habitId) => {
     if (!userStats?._id) return
@@ -139,8 +170,22 @@ function Dashboard() {
   ]
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Welcome Header */}
+    <>
+      {/* Confetti for level up */}
+      <Confetti trigger={showConfetti} />
+
+      {/* Achievement Toast */}
+      <AnimatePresence>
+        {newAchievement && (
+          <AchievementToast
+            achievement={newAchievement}
+            onClose={() => setNewAchievement(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Welcome Header */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -412,7 +457,8 @@ function Dashboard() {
           </motion.div>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   )
 }
 

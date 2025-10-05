@@ -37,7 +37,7 @@ function Navbar() {
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
     { name: 'Habits', href: '/habits', icon: Calendar },
     { name: 'Analytics', href: '/analytics', icon: BarChart3 },
-    { name: 'Social', href: '/social', icon: Users },
+    { name: 'Profile', href: '/profile', icon: User },
     { name: 'Settings', href: '/settings', icon: Settings }
   ]
 
@@ -86,7 +86,7 @@ function Navbar() {
               {theme === 'dark' ? (
                 <Sun className="w-4 h-4 text-yellow-500" />
               ) : (
-                <Moon className="w-4 h-4 text-gray-600" />
+                <Moon className="w-4 h-4 text-gray-700 dark:text-gray-300" />
               )}
             </button>
 
@@ -155,7 +155,7 @@ function Navbar() {
                   {theme === 'dark' ? (
                     <Sun className="w-4 h-4 text-yellow-500" />
                   ) : (
-                    <Moon className="w-4 h-4 text-gray-600 dark:text-gray-300" />
+                    <Moon className="w-4 h-4 text-gray-700 dark:text-gray-300" />
                   )}
                   {theme === 'dark' ? 'Light Mode' : 'Dark Mode'}
                 </button>

@@ -9,8 +9,9 @@ import About from './pages/About'
 import Contact from './pages/Contact'
 import Dashboard from './pages/Dashboard'
 import Habits from './pages/Habits'
+import CreateHabit from './pages/CreateHabit'
 import Analytics from './pages/Analytics'
-import Social from './pages/Social'
+import Profile from './pages/Profile'
 import Settings from './pages/Settings'
 
 // Components
@@ -113,14 +114,19 @@ function App() {
             <Habits />
           </AuthWrapper>
         } />
+        <Route path="/habits/create" element={
+          <AuthWrapper>
+            <CreateHabit />
+          </AuthWrapper>
+        } />
         <Route path="/analytics" element={
           <AuthWrapper>
             <Analytics />
           </AuthWrapper>
         } />
-        <Route path="/social" element={
+        <Route path="/profile" element={
           <AuthWrapper>
-            <Social />
+            <Profile />
           </AuthWrapper>
         } />
         <Route path="/settings" element={

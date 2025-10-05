@@ -16,6 +16,7 @@ import type {
 import type * as achievements from "../achievements.js";
 import type * as analytics from "../analytics.js";
 import type * as habits from "../habits.js";
+import type * as rewards from "../rewards.js";
 import type * as users from "../users.js";
 
 /**
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   achievements: typeof achievements;
   analytics: typeof analytics;
   habits: typeof habits;
+  rewards: typeof rewards;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

@@ -97,6 +97,35 @@ export function useCheckAchievements() {
   return useMutation(api.achievements.checkAchievements);
 }
 
+export function useUpcomingAchievements() {
+  const { user } = useUser();
+  const convexUser = useQuery(
+    api.users.getUserByUserId,
+    user?.id ? { userId: user.id } : "skip"
+  );
+  return useQuery(
+    api.rewards.getUpcomingAchievements,
+    convexUser?._id ? { userId: convexUser._id } : "skip"
+  );
+}
+
+// Rewards hooks
+export function useUnlockTheme() {
+  return useMutation(api.rewards.unlockTheme);
+}
+
+export function useSummaryReport(period: "week" | "month") {
+  const { user } = useUser();
+  const convexUser = useQuery(
+    api.users.getUserByUserId,
+    user?.id ? { userId: user.id } : "skip"
+  );
+  return useQuery(
+    api.rewards.getSummaryReport,
+    convexUser?._id ? { userId: convexUser._id, period } : "skip"
+  );
+}
+
 // Analytics hooks
 export function useCompletionStats(days?: number) {
   const { user } = useUser();
