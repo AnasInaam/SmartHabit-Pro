@@ -20,6 +20,7 @@ import { Button } from '../components/ui/Button'
 import { Badge } from '../components/ui/Badge'
 import { Progress } from '../components/ui/Progress'
 import LoadingSpinner from '../components/ui/LoadingSpinner'
+import AchievementsModal from '../components/achievements/AchievementsModal'
 import { useUserStats, useUserAchievements } from '../hooks/useConvex'
 import toast from 'react-hot-toast'
 
@@ -30,6 +31,7 @@ function Profile() {
   const [isEditing, setIsEditing] = useState(false)
   const [displayName, setDisplayName] = useState('')
   const [bio, setBio] = useState('')
+  const [showAchievementsModal, setShowAchievementsModal] = useState(false)
 
   useEffect(() => {
     if (user) {
@@ -253,7 +255,11 @@ function Profile() {
                 Achievements
               </CardTitle>
               {achievements && achievements.length > 6 && (
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => setShowAchievementsModal(true)}
+                >
                   View All ({achievements.length})
                 </Button>
               )}
@@ -293,6 +299,13 @@ function Profile() {
           </CardContent>
         </Card>
       </motion.div>
+
+      {/* Achievements Modal */}
+      <AchievementsModal
+        isOpen={showAchievementsModal}
+        onClose={() => setShowAchievementsModal(false)}
+        achievements={achievements}
+      />
     </div>
   )
 }

@@ -53,32 +53,48 @@ function Analytics() {
     )
   }
 
+  // Calculate stats with safe defaults
+  const totalHabits = streakAnalysis?.totalHabits || 0;
+  const activeHabits = streakAnalysis?.activeHabits || 0;
+  const avgStreak = streakAnalysis?.averageStreak || 0;
+  const longestStreak = streakAnalysis?.longestOverallStreak || 0;
+  
+  // Calculate completion rate
+  let completionRate = 0;
+  if (totalHabits > 0 && completionStats && completionStats.length > 0) {
+    const totalPossibleCompletions = totalHabits * completionStats.length;
+    const actualCompletions = completionStats.reduce((sum, day) => sum + day.completions, 0);
+    completionRate = totalPossibleCompletions > 0 
+      ? Math.round((actualCompletions / totalPossibleCompletions) * 100)
+      : 0;
+  }
+
   const quickStats = [
     { 
       icon: Activity, 
-      label: 'Total Completions', 
-      value: streakAnalysis?.totalCompletions || 0, 
+      label: 'Total Habits', 
+      value: totalHabits, 
       color: 'text-blue-500', 
       bgColor: 'bg-blue-100 dark:bg-blue-900/20' 
     },
     { 
       icon: Target, 
       label: 'Completion Rate', 
-      value: `${Math.round((streakAnalysis?.completionRate || 0) * 100)}%`, 
+      value: `${completionRate}%`, 
       color: 'text-green-500', 
       bgColor: 'bg-green-100 dark:bg-green-900/20' 
     },
     { 
       icon: Award, 
       label: 'Best Streak', 
-      value: `${streakAnalysis?.longestStreak || 0} days`, 
+      value: `${longestStreak} days`, 
       color: 'text-purple-500', 
       bgColor: 'bg-purple-100 dark:bg-purple-900/20' 
     },
     { 
       icon: Calendar, 
-      label: 'Active Days', 
-      value: streakAnalysis?.totalActiveDays || 0, 
+      label: 'Average Streak', 
+      value: `${Math.round(avgStreak)} days`, 
       color: 'text-orange-500', 
       bgColor: 'bg-orange-100 dark:bg-orange-900/20' 
     }

@@ -307,15 +307,15 @@ function Dashboard() {
                       key={habit._id}
                       className="flex items-center justify-between p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-primary-500 transition-all"
                     >
-                      <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-4 flex-1 min-w-0">
                         <div 
-                          className="w-12 h-12 rounded-lg flex items-center justify-center text-2xl"
-                          style={{ backgroundColor: habit.color + '20' }}
+                          className="w-12 h-12 rounded-lg flex items-center justify-center flex-shrink-0"
+                          style={{ backgroundColor: habit.color }}
                         >
-                          {habit.icon}
+                          <Target className="w-6 h-6 text-white" />
                         </div>
-                        <div>
-                          <h4 className="font-semibold text-gray-900 dark:text-white">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="font-semibold text-gray-900 dark:text-white truncate">
                             {habit.name}
                           </h4>
                           <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">

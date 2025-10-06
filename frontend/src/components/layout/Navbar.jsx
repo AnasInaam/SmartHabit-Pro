@@ -91,7 +91,15 @@ function Navbar() {
             </button>
 
             {isSignedIn ? (
-              <UserButton afterSignOutUrl="/" />
+              <UserButton 
+                afterSignOutUrl="/"
+                appearance={{
+                  elements: {
+                    avatarBox: "w-10 h-10",
+                    userButtonTrigger: "focus:shadow-none"
+                  }
+                }}
+              />
             ) : (
               <div className="flex items-center space-x-3">
                 <SignInButton mode="modal">
